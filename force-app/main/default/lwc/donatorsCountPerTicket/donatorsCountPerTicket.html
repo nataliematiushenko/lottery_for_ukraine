@@ -1,0 +1,44 @@
+<template>
+  <lightning-card title={totalTicketsCount}
+    icon-name="standard:record_create">
+    <lightning-spinner if:true={isLoading}></lightning-spinner>
+    <div class="slds-grid slds-gutters">
+      <div class="slds-col slds-size_1-of-2">
+        <span>
+          <lightning-datatable data={donatorsTickets}
+            columns={outputCols}
+            key-field="tikNum"
+            hide-checkbox-column
+            enable-infinite-loading></lightning-datatable>
+        </span>
+      </div>
+      <div class="slds-col slds-size_1-of-6">
+        <span><lightning-button variant="success"
+            label="Обрати переможця"
+            title="Обрати переможця"
+            onclick={findWinner}
+            class="slds-m-left_x-small"></lightning-button></span>
+      </div>
+      <div class="slds-col slds-size_1-of-3">
+        <lightning-card if:true={recordId}
+          title='Прапор отримує'
+          icon-name="custom:custom11">
+          <lightning-record-view-form object-api-name='Donations__c'
+            record-id={recordId}>
+            <lightning-output-field field-name="Name">
+            </lightning-output-field>
+            <lightning-output-field field-name="Description__c">
+            </lightning-output-field>
+            <lightning-output-field field-name="DateTime__c">
+            </lightning-output-field>
+          </lightning-record-view-form>
+        </lightning-card>
+      </div>
+    </div>
+
+
+
+
+
+  </lightning-card>
+</template>
