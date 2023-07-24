@@ -23,13 +23,13 @@
         <lightning-card if:true={recordId}
           title='Прапор отримує'
           icon-name="custom:custom11">
-          <lightning-record-view-form object-api-name='Donations__c'
+          <lightning-record-view-form object-api-name={objectName}
             record-id={recordId}>
-            <lightning-output-field field-name="Name">
+            <lightning-output-field field-name={fields.name}>
             </lightning-output-field>
-            <lightning-output-field field-name="Description__c">
+            <lightning-output-field field-name={fields.description}>
             </lightning-output-field>
-            <lightning-output-field field-name="DateTime__c">
+            <lightning-output-field field-name={fields.dateTime}>
             </lightning-output-field>
           </lightning-record-view-form>
         </lightning-card>

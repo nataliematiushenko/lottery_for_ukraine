@@ -27,8 +27,10 @@ function getPageComponent(element) {
     const button = element.shadowRoot.querySelector('lightning-button');
     const recordViewForm = element.shadowRoot.querySelector('lightning-record-view-form');
     const spinner = element.shadowRoot.querySelector('lightning-spinner');
-
-    return { card, datatable, button, recordViewForm, spinner };
+    const outputFieldNames = Array.from(
+        element.shadowRoot.querySelectorAll('lightning-output-field')
+    ).map((outputField) => outputField.fieldName.fieldApiName);
+    return { card, datatable, button, recordViewForm, spinner, outputFieldNames };
 }
 
 async function setupElement(emit = false) {
@@ -118,7 +120,7 @@ describe('c-donators-count-per-ticket', () => {
 
     });
 
-    it('finds a winner', async () => {
+    it('finds a winner and renders given set of lightning-output-field`s in specific order', async () => {
         jest.useFakeTimers();
         let element = await setupElement(true);
         let { button } = getPageComponent(element);
@@ -128,8 +130,10 @@ describe('c-donators-count-per-ticket', () => {
         jest.runAllTimers();
         await flushPromises();
 
-        let { recordViewForm } = getPageComponent(element);
+        let { recordViewForm, outputFieldNames } = getPageComponent(element);
+        let OUTPUT_FIELDS = ["Name", "Description__c", "DateTime__c"];
         expect(recordViewForm).toBeTruthy();
 
+        expect(outputFieldNames).toEqual(OUTPUT_FIELDS);
     });
 });
