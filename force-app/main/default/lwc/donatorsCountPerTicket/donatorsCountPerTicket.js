@@ -4,7 +4,6 @@ import getRecords from '@salesforce/apex/DonationsController.getRecords';
 
 
 export default class DonatorsCountPerTicket extends LightningElement {
-
   @api ticketPrice = 100;
   @api donations;
   donatorsTickets = [];
@@ -23,7 +22,7 @@ export default class DonatorsCountPerTicket extends LightningElement {
   ]
 
 
-  @wire(getRecords) getRecords(res) {
+  @wire(getRecords) getDonationsRecords(res) {
     if (res.data) {
       this.donations = res.data;
       let donatorsTickets = [];
@@ -46,8 +45,8 @@ export default class DonatorsCountPerTicket extends LightningElement {
       });
 
       this.totalTicketsCount = `Всього квитків: ${this.donatorsTickets.length}`;
-      if (res.data || res.error) this.isLoading = false;
     }
+    if (res.data || res.error) this.isLoading = false;
   }
 
 

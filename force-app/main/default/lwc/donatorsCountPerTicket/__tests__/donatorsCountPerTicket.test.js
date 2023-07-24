@@ -1,59 +1,135 @@
 import { createElement } from 'lwc';
 import DonatorsCountPerTicket from 'c/donatorsCountPerTicket';
+import getRecords from '@salesforce/apex/DonationsController.getRecords';
+import { setImmediate } from "timers";
 
-let DONATIONS = require('./data/donations.json')
+// Mocking the apex method response
+const DONATIONS = require('./data/donations.json');
+
+jest.mock(
+    "@salesforce/apex/DonationsController.getRecords",
+    () => {
+        const { createApexTestWireAdapter } = require("@salesforce/sfdx-lwc-jest");
+        return {
+            default: createApexTestWireAdapter(jest.fn()),
+        };
+    },
+    { virtual: true }
+);
+
+async function flushPromises() {
+    return new Promise((resolve) => setImmediate(resolve));
+}
+
+function getPageComponent(element) {
+    const card = element.shadowRoot.querySelector('lightning-card');
+    const datatable = element.shadowRoot.querySelector('lightning-datatable');
+    const button = element.shadowRoot.querySelector('lightning-button');
+    const recordViewForm = element.shadowRoot.querySelector('lightning-record-view-form');
+    const spinner = element.shadowRoot.querySelector('lightning-spinner');
+
+    return { card, datatable, button, recordViewForm, spinner };
+}
+
+async function setupElement(emit = false) {
+    // Create the component
+    const element = createElement('c-donators-count-per-ticket', {
+        is: DonatorsCountPerTicket
+    });
+    element.ticketPrice = 100;
+    document.body.appendChild(element);
+
+    if (emit) {
+        // 16 original records
+        getRecords.emit(DONATIONS);
+        await flushPromises();
+    }
+    return element;
+}
 
 describe('c-donators-count-per-ticket', () => {
     afterEach(() => {
-        // The jsdom instance is shared across test cases in a single file so reset the DOM
         while (document.body.firstChild) {
             document.body.removeChild(document.body.firstChild);
         }
+        jest.clearAllMocks();
     });
 
-    it('validates tickets assignment', () => {
-        // Arrange
-        const element = createElement('c-donators-count-per-ticket', {
-            is: DonatorsCountPerTicket
-        });
+    it('shows spinner while the data is loading, hides after received it (success)', async () => {
+        let element = await setupElement();
 
-        element.ticketPrice = 50;
-        element.donations = DONATIONS;
+        let { spinner } = getPageComponent(element);
+        expect(spinner).toBeTruthy();
 
-        document.body.appendChild(element);
-        let newList = element.convert2Tickets()
+        // 16 original records
+        getRecords.emit(DONATIONS);
+        await flushPromises();
+        ({ spinner } = getPageComponent(element));
 
-        expect(element.donations.length).toBe(186);
-        expect(newList.length).toBe(1826);
-        expect(newList[0].id).toEqual(newList[1].id);
-        expect(newList[0].tikNum).toEqual(1);
-        expect(newList[1].tikNum).toEqual(2);
+        expect(spinner).toBeFalsy();
+    });
 
-        // expect(newList[0]).toEqual({
-        //     "timestamp": "19.03.2021 00:36:31",
-        //     "description": "З чорної картки",
-        //     "totalAmount": 100,
-        //     "RRN": "",
-        //     "id": "19.03.2021 00:36:31 З чорної картки",
-        //     "tikNum": 1
-        // });
-        // expect(newList[1]).toEqual({
-        //     "timestamp": "19.03.2021 00:36:31",
-        //     "description": "З чорної картки",
-        //     "totalAmount": 100,
-        //     "Залишок": "200.16",
-        //     "RRN": "",
-        //     "id": "19.03.2021 00:36:31 З чорної картки",
-        //     "tikNum": 2
-        // });
+    it('shows spinner while the data is loading, hides after failure (error)', async () => {
+        let element = await setupElement();
 
+        let { spinner } = getPageComponent(element);
+        expect(spinner).toBeTruthy();
 
-        // raise the stakes
-        element.ticketPrice = 500;
-        newList = element.convert2Tickets()
+        // 16 original records
+        getRecords.error();
+        await flushPromises();
+        ({ spinner } = getPageComponent(element));
 
-        expect(element.donations.length).toBe(13);
-        expect(newList.length).toBe(13);
+        expect(spinner).toBeFalsy();
+    });
+
+    it('displays correct number of tickets', async () => {
+        let element = await setupElement(true);
+        let { card, datatable } = getPageComponent(element);
+
+        expect(element.donations.length).toBe(16);
+        expect(card.title).toBe('Всього квитків: 103');
+        expect(datatable.data.length).toBe(103);
+
+        expect(datatable.data[0].amount).toBe(15);
+        expect(datatable.data[0].numOfGeneratedTickets).toBe(1);
+        expect(datatable.data[0].additional_tikNum).toBe(1);
+        expect(datatable.data[0].tikNum).toBe(0);
+
+        expect(datatable.data[1].amount).toBe(3660);
+        expect(datatable.data[1].numOfGeneratedTickets).toBe(36);
+        expect(datatable.data[1].additional_tikNum).toBe(1);
+        expect(datatable.data[1].tikNum).toBe(1);
+
+        expect(datatable.data[4].amount).toBe(3660);
+        expect(datatable.data[4].numOfGeneratedTickets).toBe(36);
+        expect(datatable.data[4].additional_tikNum).toBe(4);
+        expect(datatable.data[4].tikNum).toBe(4);
+
+        expect(datatable.data[36].amount).toBe(3660);
+        expect(datatable.data[36].numOfGeneratedTickets).toBe(36);
+        expect(datatable.data[36].additional_tikNum).toBe(36);
+        expect(datatable.data[36].tikNum).toBe(36);
+
+        expect(datatable.data[37].amount).toBe(20);
+        expect(datatable.data[37].numOfGeneratedTickets).toBe(1);
+        expect(datatable.data[37].additional_tikNum).toBe(1);
+        expect(datatable.data[37].tikNum).toBe(37);
+
+    });
+
+    it('finds a winner', async () => {
+        jest.useFakeTimers();
+        let element = await setupElement(true);
+        let { button } = getPageComponent(element);
+
+        button.click();
+
+        jest.runAllTimers();
+        await flushPromises();
+
+        let { recordViewForm } = getPageComponent(element);
+        expect(recordViewForm).toBeTruthy();
 
     });
 });
