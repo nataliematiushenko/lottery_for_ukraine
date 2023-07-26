@@ -3,7 +3,6 @@ import DonatorsCountPerTicket from 'c/donatorsCountPerTicket';
 import getRecords from '@salesforce/apex/DonationsController.getRecords';
 import { setImmediate } from "timers";
 
-// Mocking the apex method response
 const DONATIONS = require('./data/donations.json');
 
 jest.mock(
@@ -63,7 +62,6 @@ describe('c-donators-count-per-ticket', () => {
         let { spinner } = getPageComponent(element);
         expect(spinner).toBeTruthy();
 
-        // 16 original records
         getRecords.emit(DONATIONS);
         await flushPromises();
         ({ spinner } = getPageComponent(element));
@@ -77,7 +75,6 @@ describe('c-donators-count-per-ticket', () => {
         let { spinner } = getPageComponent(element);
         expect(spinner).toBeTruthy();
 
-        // 16 original records
         getRecords.error();
         await flushPromises();
         ({ spinner } = getPageComponent(element));
@@ -90,6 +87,7 @@ describe('c-donators-count-per-ticket', () => {
         let { card, datatable } = getPageComponent(element);
 
         expect(element.donations.length).toBe(16);
+        
         expect(card.title).toBe('Всього квитків: 103');
         expect(datatable.data.length).toBe(103);
 
