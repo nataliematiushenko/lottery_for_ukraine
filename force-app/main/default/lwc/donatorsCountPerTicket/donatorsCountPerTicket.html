@@ -1,9 +1,10 @@
 <template>
-  <lightning-card title={totalTicketsCount}
-    icon-name="standard:record_create">
-    <lightning-spinner if:true={isLoading}></lightning-spinner>
-    <div class="slds-grid slds-gutters">
-      <div class="slds-col slds-size_1-of-2">
+
+  <lightning-spinner if:true={isLoading}></lightning-spinner>
+  <div class="slds-grid slds-gutters">
+    <div class="slds-col slds-size_3-of-5">
+      <lightning-card title={totalTicketsCount}
+        icon-name="standard:record_create">
         <span>
           <lightning-datatable data={donatorsTickets}
             columns={outputCols}
@@ -11,34 +12,31 @@
             hide-checkbox-column
             enable-infinite-loading></lightning-datatable>
         </span>
-      </div>
-      <div class="slds-col slds-size_1-of-6">
-        <span><lightning-button variant="success"
-            label="Обрати переможця"
-            title="Обрати переможця"
-            onclick={findWinner}
-            class="slds-m-left_x-small"></lightning-button></span>
-      </div>
-      <div class="slds-col slds-size_1-of-3">
-        <lightning-card if:true={recordId}
-          title='Прапор отримує'
-          icon-name="custom:custom11">
-          <lightning-record-view-form object-api-name={objectName}
-            record-id={recordId}>
-            <lightning-output-field field-name={fields.name}>
-            </lightning-output-field>
-            <lightning-output-field field-name={fields.description}>
-            </lightning-output-field>
-            <lightning-output-field field-name={fields.dateTime}>
-            </lightning-output-field>
-          </lightning-record-view-form>
-        </lightning-card>
-      </div>
+      </lightning-card>
     </div>
 
+    <div class="slds-col slds-size_2-of-5">
+      <lightning-card title="ПРАПОР ОТРИМУЄ"
+        icon-name="custom:custom11">
+
+        <lightning-button variant="success"
+          slot="actions"
+          label="Обрати переможця"∏
+          title="Обрати переможця"
+          onclick={findWinner}
+          class="slds-m-left_x-small"></lightning-button>
+        <lightning-record-view-form object-api-name={objectName}
+          record-id={recordId}>
+          <lightning-output-field field-name={fields.name}>
+          </lightning-output-field>
+          <lightning-output-field field-name={fields.description}>
+          </lightning-output-field>
+          <lightning-output-field field-name={fields.dateTime}>
+          </lightning-output-field>
+        </lightning-record-view-form>
+      </lightning-card>
+    </div>
+  </div>
 
 
-
-
-  </lightning-card>
 </template>

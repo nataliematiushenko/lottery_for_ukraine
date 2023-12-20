@@ -1,14 +1,14 @@
 /* eslint-disable @lwc/lwc/no-api-reassignments */
 import { LightningElement, api, wire } from 'lwc';
 import getRecords from '@salesforce/apex/DonationsController.getRecords';
-import DONATIONS_OBJECT from '@salesforce/schema/Donations__c';
-import NAME_FIELD from '@salesforce/schema/Donations__c.Name';
-import DESCRIPTION_FIELD from '@salesforce/schema/Donations__c.Description__c';
-import DATE_TIME_FIELD from '@salesforce/schema/Donations__c.DateTime__c';
+import DONATIONS_OBJECT from '@salesforce/schema/donation_ua__c';
+import NAME_FIELD from '@salesforce/schema/donation_ua__c.Name';
+import DESCRIPTION_FIELD from '@salesforce/schema/donation_ua__c.Description__c';
+import DATE_TIME_FIELD from '@salesforce/schema/donation_ua__c.DateTime__c';
 
 
 export default class DonatorsCountPerTicket extends LightningElement {
-  @api ticketPrice = 100;
+  @api ticketPrice = 50;
   @api donations;
   donatorsTickets = [];
   recordId;
@@ -26,7 +26,6 @@ export default class DonatorsCountPerTicket extends LightningElement {
     { label: "Ticket Number", fieldName: "tikNum" },
     { label: "DateTime", fieldName: "dateTime" },
     { label: "Amount", fieldName: "amount" },
-    { label: "Number of tickets per donation", fieldName: "numOfGeneratedTickets" },
     { label: "Single ticket count", fieldName: "additional_tikNum" }
   ]
 
@@ -42,7 +41,6 @@ export default class DonatorsCountPerTicket extends LightningElement {
             id: Id,
             amount: Amount__c,
             dateTime: DateTime__c,
-            numOfGeneratedTickets: delta,
             additional_tikNum: i
           });
         }
@@ -53,7 +51,7 @@ export default class DonatorsCountPerTicket extends LightningElement {
         return { ...el, tikNum: i }
       });
 
-      this.totalTicketsCount = `Всього квитків: ${this.donatorsTickets.length}`;
+      this.totalTicketsCount = `Всього квитків: ${this.donatorsTickets.length}, вартість одного квитка: ${this.ticketPrice}`;
     }
     if (res.data || res.error) this.isLoading = false;
   }
