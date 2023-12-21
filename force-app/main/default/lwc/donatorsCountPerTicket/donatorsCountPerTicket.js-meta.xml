@@ -5,5 +5,7 @@
     <masterLabel>Stand with Ukraine Lottery</masterLabel>
     <targets>
         <target>lightning__AppPage</target>
+        <target>lightning__HomePage</target>
+
     </targets>
 </LightningComponentBundle>

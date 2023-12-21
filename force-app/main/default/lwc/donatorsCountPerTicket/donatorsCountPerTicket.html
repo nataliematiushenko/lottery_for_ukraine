@@ -3,37 +3,66 @@
   <lightning-spinner if:true={isLoading}></lightning-spinner>
   <div class="slds-grid slds-gutters">
     <div class="slds-col slds-size_3-of-5">
-      <lightning-card title={totalTicketsCount}
+      <lightning-card title={summaryLine}
         icon-name="standard:record_create">
         <span>
-          <lightning-datatable data={donatorsTickets}
+          <lightning-datatable data={data}
             columns={outputCols}
             key-field="tikNum"
             hide-checkbox-column
             enable-infinite-loading></lightning-datatable>
+          <lightning-layout horizontal-align="space">
+            <lightning-layout-item flexibility="auto">
+              <lightning-button label="Previous"
+                icon-name="utility:chevronleft"
+                onclick={previousHandler}>
+              </lightning-button>
+            </lightning-layout-item>
+            <lightning-layout-item flexibility="auto">
+              Page {page} of {totalPage}
+            </lightning-layout-item>
+            <lightning-layout-item flexibility="auto">
+              <lightning-button label="Next"
+                icon-name="utility:chevronright"
+                icon-position="right"
+                onclick={nextHandler}>
+              </lightning-button>
+            </lightning-layout-item>
+          </lightning-layout>
         </span>
       </lightning-card>
     </div>
 
     <div class="slds-col slds-size_2-of-5">
-      <lightning-card title="ПРАПОР ОТРИМУЄ"
+      <lightning-card title="ПЕРЕМОЖЦІ ЛОТЕРЕЇ"
         icon-name="custom:custom11">
 
         <lightning-button variant="success"
           slot="actions"
-          label="Обрати переможця"∏
-          title="Обрати переможця"
+          label="Обрати"
+          title="Обрати"
           onclick={findWinner}
           class="slds-m-left_x-small"></lightning-button>
-        <lightning-record-view-form object-api-name={objectName}
-          record-id={recordId}>
-          <lightning-output-field field-name={fields.name}>
-          </lightning-output-field>
-          <lightning-output-field field-name={fields.description}>
-          </lightning-output-field>
-          <lightning-output-field field-name={fields.dateTime}>
-          </lightning-output-field>
-        </lightning-record-view-form>
+        <div class="slds-grid">
+
+          <template for:each={records}
+            for:item="record">
+            <div key={record.id}
+              class="slds-col slds-size_1-of-3">
+              <span>
+                <lightning-record-view-form object-api-name={objectName}
+                  record-id={record.id}>
+                  <lightning-output-field field-name={fields.name}>
+                  </lightning-output-field>
+                  <lightning-output-field field-name={fields.description}>
+                  </lightning-output-field>
+                  <lightning-output-field field-name={fields.dateTime}>
+                  </lightning-output-field>
+                </lightning-record-view-form>
+              </span>
+            </div>
+          </template>
+        </div>
       </lightning-card>
     </div>
   </div>
