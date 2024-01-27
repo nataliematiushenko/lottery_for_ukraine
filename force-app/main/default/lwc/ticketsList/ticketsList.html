@@ -1,0 +1,21 @@
+<template>
+  <template if:true={winners}>
+    <article class="slds-card slds-m-top_medium"
+      style="margin-top: 65px;">
+      <div class="slds-card__body slds-card__body_inner">
+        <h2 class="slds-text-heading_small">Переможці</h2>
+        <div class="slds-m-around_medium">
+          <template for:each={winners}
+            for:item="winner">
+            <div key={winner.Id}
+              class="slds-p-around_small slds-border_bottom">
+              <p class="slds-text-heading_medium">{winner.name}</p>
+              <p class="slds-text-body_small">Приз: {winner.prize}</p>
+
+            </div>
+          </template>
+        </div>
+      </div>
+    </article>
+  </template>
+</template>

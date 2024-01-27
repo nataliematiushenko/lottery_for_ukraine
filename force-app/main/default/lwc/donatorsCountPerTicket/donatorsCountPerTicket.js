@@ -1,10 +1,10 @@
 /* eslint-disable @lwc/lwc/no-api-reassignments */
 import { LightningElement, api, wire } from 'lwc';
 import getRecords from '@salesforce/apex/DonationsController.getRecords';
-import DONATIONS_OBJECT from '@salesforce/schema/Donations__c';
-import NAME_FIELD from '@salesforce/schema/Donations__c.Name';
-import DESCRIPTION_FIELD from '@salesforce/schema/Donations__c.Description__c';
-import DATE_TIME_FIELD from '@salesforce/schema/Donations__c.DateTime__c';
+// import DONATIONS_OBJECT from '@salesforce/schema/Donations__c';
+// import NAME_FIELD from '@salesforce/schema/Donations__c.Name';
+// import DESCRIPTION_FIELD from '@salesforce/schema/Donations__c.Description__c';
+// import DATE_TIME_FIELD from '@salesforce/schema/Donations__c.DateTime__c';
 
 
 export default class DonatorsCountPerTicket extends LightningElement {
@@ -15,12 +15,14 @@ export default class DonatorsCountPerTicket extends LightningElement {
   totalTicketsCount;
   isLoading = true;
 
-  objectName = DONATIONS_OBJECT;
-  fields = {
-    name: NAME_FIELD,
-    description: DESCRIPTION_FIELD,
-    dateTime: DATE_TIME_FIELD,
-  };
+  //Uncomment if using records from SF
+
+  // objectName = DONATIONS_OBJECT;
+  // fields = {
+  //   name: NAME_FIELD,
+  //   description: DESCRIPTION_FIELD,
+  //   dateTime: DATE_TIME_FIELD,
+  // };
 
   outputCols = [
     { label: "Ticket Number", fieldName: "tikNum" },
