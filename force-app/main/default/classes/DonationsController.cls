@@ -1,12 +1,10 @@
 public with sharing class DonationsController {
 
     @AuraEnabled(cacheable=true)
-    public static List<Donations__c> getRecords(){
-        List<Donations__c> donations = [
-            SELECT Id, DateTime__c, Date__c, Description__c, Amount__c
-            FROM Donations__c
-            WHERE Excluded_from_lottery__c = FALSE
-            LIMIT 200];
+    public static List<Donation__c> getRecords(){
+        List<Donation__c> donations = [
+            SELECT Id, NickName__c, Amount__c, Comments__c
+            FROM Donation__c];
         return donations;
     }
 }

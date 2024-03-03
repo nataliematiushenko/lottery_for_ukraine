@@ -1,162 +1,12 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import tickets_channel from "@salesforce/messageChannel/tickets__c";
 import { publish, MessageContext } from "lightning/messageService";
-
-const PARTICIPANTS = [
-  {
-    "name": "oxanalot",
-    "amount": 50
-  },
-  {
-    "name": "vikunichka",
-    "amount": 50
-  },
-  {
-    "name": "myrroslava",
-    "amount": 500
-  },
-  {
-    "name": "Nahorna_hanna",
-    "amount": 50
-  },
-  {
-    "name": "litvinenko13666",
-    "amount": 100
-  },
-  {
-    "name": "m_kosh",
-    "amount": 200
-  },
-  {
-    "name": "polina_nevediuk",
-    "amount": 100
-  },
-  {
-    "name": "zhen_shen14",
-    "amount": 300
-  },
-  {
-    "name": "alwayswonnadie",
-    "amount": 100
-  },
-  {
-    "name": "Єгор Л.",
-    "amount": 150
-  },
-  {
-    "name": "l8kout",
-    "amount": 50
-  },
-  {
-    "name": "_d.slb",
-    "amount": 50
-  },
-  {
-    "name": "margarita_cherry1",
-    "amount": 300
-  },
-  {
-    "name": "arinaaklepko",
-    "amount": 200
-  },
-  {
-    "name": "lkolomiytsev",
-    "amount": 200
-  },
-  {
-    "name": "Don_Benderivec",
-    "amount": 50
-  },
-  {
-    "name": "shevchenk0oo",
-    "amount": 50
-  },
-  {
-    "name": "polishchuk_lilia",
-    "amount": 50
-  },
-  {
-    "name": "goodbyedust",
-    "amount": 150
-  },
-  {
-    "name": "Наталія",
-    "amount": 150
-  },
-  {
-    "name": "Анна Ф.",
-    "amount": 500
-  },
-  {
-    "name": "nastalgja",
-    "amount": 100
-  },
-  {
-    "name": "678825585",
-    "amount": 50
-  },
-  {
-    "name": "yours_kat",
-    "amount": 200
-  },
-  {
-    "name": "artm_svk",
-    "amount": 100
-  },
-  {
-    "name": "hokkaido13_13_13",
-    "amount": 50
-  },
-  {
-    "name": "bookkania",
-    "amount": 100
-  },
-  {
-    "name": "tanya_malymuka",
-    "amount": 100
-  },
-  {
-    "name": "_nassophia",
-    "amount": 60
-  },
-  {
-    "name": "_tartak",
-    "amount": 50
-  },
-  {
-    "name": "manfoxcashew",
-    "amount": 150
-  },
-  {
-    "name": "svitlana.martyniuk",
-    "amount": 50
-  },
-  {
-    "name": "13, tw/DenysFromUA",
-    "amount": 100
-  },
-  {
-    "name": "arimaataa",
-    "amount": 700
-  },
-  {
-    "name": "lilshrm",
-    "amount": 560.47
-  },
-  {
-    "name": "mariasahaydak",
-    "amount": 480
-  },
-  {
-    "name": "a_berezjuk",
-    "amount": 100
-  }
-];
+import getRecords from '@salesforce/apex/DonationsController.getRecords';
 
 export default class DigitsViewDonators extends LightningElement {
   @api ticketPrice = 50;
   style = "height: 42 vh";
-  @track participants = PARTICIPANTS;
+  @track participants;
   @track tickets = [];
   @track ticketsToDisplay = [];
   @track winners = [];
@@ -166,36 +16,47 @@ export default class DigitsViewDonators extends LightningElement {
   @wire(MessageContext)
   messageContext;
 
-  connectedCallback() {
+  async connectedCallback() {
+    let participants = await getRecords();
+
+    this.participants = participants;
     this.totalParticipants = this.participants.length;
   }
 
   generateTickets() {
-    let tix = 1;
-    this.participants.forEach(p => {
-      let delta = p.amount < this.ticketPrice ? 1 : Math.floor(p.amount / this.ticketPrice);
-      for (let i = 1; i <= delta; i++) {
-        this.tickets.push({
-          t_number: tix,
-          personal_t_num: i,
-          ...p
-        });
-        tix++;
-      }
-    });
-    this.ticketsToDisplay = this.tickets;
-    this.totalTickets = this.tickets.length;
+    if (!this.totalTickets) {
+
+
+      let tix = 1;
+      this.participants.forEach(p => {
+        let delta = p.i42as__Amount__c < this.ticketPrice ? 1 : Math.floor(p.i42as__Amount__c / this.ticketPrice);
+        for (let i = 1; i <= delta; i++) {
+          this.tickets.push({
+            t_number: tix,
+            personal_t_num: i,
+            ...p
+          });
+          tix++;
+        }
+      });
+      this.ticketsToDisplay = this.tickets;
+      console.log(JSON.parse(JSON.stringify(this.ticketsToDisplay)));
+      this.totalTickets = this.tickets.length;
+    }
   }
 
   findWinners() {
     const prizes = [
-      "Дзеркало з врятованого скла від @shchos_cikave",
-      "Сет шкарпеток від @sammyicon",
-      "Набір для вʼязання гачком (на вибір) від @crochetty.kit",
-      "Набір для вʼязання гачком (на вибір) від @crochetty.kit"
+      "Трикотажний костюм від @hochu.brand",
+      "Футболка на вибір від @vidro.ua",
+      "Свічковий бокс від @beton_home",
+      "Стартер пек батончиків FIZI від @fizi.ua",
+      "Суха суміш для приготування коктейлю від @uamade.ua",
+      "Горня від @uamade.ua",
+      "«Лексикон таємних знань» з автографом Тараса Прохаська"
     ];
 
-    for (let i = 0; i <= 3; i++) {
+    for (let i = 0; i < prizes.length; i++) {
       let indexes = this.tickets.length - 1;
       let randomIndex = Math.round(indexes * Math.random());
       let randomRecord = this.tickets[randomIndex];
@@ -214,7 +75,7 @@ export default class DigitsViewDonators extends LightningElement {
   }
 
   excludeWinner(i) {
-    let copy = this.tickets.filter(t => t.name !== i.name);
+    let copy = this.tickets.filter(t => t.i42as__NickName__c !== i.i42as__NickName__c);
     return copy;
   }
 
