@@ -29,7 +29,7 @@ export default class DigitsViewDonators extends LightningElement {
 
       let tix = 1;
       this.participants.forEach(p => {
-        let delta = p.i42as__Amount__c < this.ticketPrice ? 1 : Math.floor(p.i42as__Amount__c / this.ticketPrice);
+        let delta = p.Amount__c < this.ticketPrice ? 1 : Math.floor(p.Amount__c / this.ticketPrice);
         for (let i = 1; i <= delta; i++) {
           this.tickets.push({
             t_number: tix,
@@ -47,13 +47,13 @@ export default class DigitsViewDonators extends LightningElement {
 
   findWinners() {
     const prizes = [
-      "Трикотажний костюм від @hochu.brand",
-      "Футболка на вибір від @vidro.ua",
-      "Свічковий бокс від @beton_home",
-      "Стартер пек батончиків FIZI від @fizi.ua",
-      "Суха суміш для приготування коктейлю від @uamade.ua",
-      "Горня від @uamade.ua",
-      "«Лексикон таємних знань» з автографом Тараса Прохаська"
+      'Великий бокс фруктової пастили від @plodovapastila',
+      'Бокс фруктової пастили від @plodovapastila',
+      'Набір з двох свічок від @kvitka_angie',
+      'Акриловий кото - пазл від @capybara.gift',
+      '«Пиши сильно» Ростислава Семківа',
+      '«Углиб за морським коником.Книжка про пам’ять, яка запам’ятається», Гільде Естбю, Ульва Естбю',
+      '«Випивка: Історія однієї любові», Керолайн Непп'
     ];
 
     for (let i = 0; i < prizes.length; i++) {
@@ -75,7 +75,7 @@ export default class DigitsViewDonators extends LightningElement {
   }
 
   excludeWinner(i) {
-    let copy = this.tickets.filter(t => t.i42as__NickName__c !== i.i42as__NickName__c);
+    let copy = this.tickets.filter(t => t.NickName__c !== i.NickName__c);
     return copy;
   }
 
