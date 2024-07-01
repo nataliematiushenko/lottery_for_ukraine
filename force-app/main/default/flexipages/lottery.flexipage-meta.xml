@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- THIS IS THE PAGE THAT SHOULD BE USED FOR THE LOTTERY - 01 JULY 2024 -->
 <FlexiPage xmlns="http://soap.sforce.com/2006/04/metadata">
     <flexiPageRegions>
         <name>header</name>
@@ -7,8 +8,8 @@
     <flexiPageRegions>
         <itemInstances>
             <componentInstance>
-                <componentName>digitsViewDonators</componentName>
-                <identifier>i42as_digitsViewDonators</identifier>
+                <componentName>donators</componentName>
+                <identifier>i42as_donators</identifier>
             </componentInstance>
         </itemInstances>
         <name>main</name>
@@ -17,15 +18,15 @@
     <flexiPageRegions>
         <itemInstances>
             <componentInstance>
-                <componentName>ticketsList</componentName>
-                <identifier>i42as_ticketsList</identifier>
+                <componentName>winners</componentName>
+                <identifier>i42as_winners</identifier>
             </componentInstance>
         </itemInstances>
         <name>sidebar</name>
         <type>Region</type>
     </flexiPageRegions>
     <masterLabel>lottery</masterLabel>
-    <sobjectType>Case</sobjectType>
+    <sobjectType>Donation__c</sobjectType>
     <template>
         <name>flexipage:recordHomeTemplateDesktop</name>
         <properties>

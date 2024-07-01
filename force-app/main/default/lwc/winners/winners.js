@@ -7,7 +7,7 @@ import {
 } from "lightning/messageService";
 import tickets_channel from "@salesforce/messageChannel/tickets__c";
 
-export default class TicketsList extends LightningElement {
+export default class Winners extends LightningElement {
   @track winners = [];
   style = "height: 75 vh";
 

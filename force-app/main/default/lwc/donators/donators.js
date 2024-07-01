@@ -3,7 +3,7 @@ import tickets_channel from "@salesforce/messageChannel/tickets__c";
 import { publish, MessageContext } from "lightning/messageService";
 import getRecords from '@salesforce/apex/DonationsController.getRecords';
 
-export default class DigitsViewDonators extends LightningElement {
+export default class Donators extends LightningElement {
   @api ticketPrice = 50;
   style = "height: 42 vh";
   @track participants;
@@ -46,15 +46,7 @@ export default class DigitsViewDonators extends LightningElement {
   }
 
   findWinners() {
-    const prizes = [
-      'Великий бокс фруктової пастили від @plodovapastila',
-      'Бокс фруктової пастили від @plodovapastila',
-      'Набір з двох свічок від @kvitka_angie',
-      'Акриловий кото - пазл від @capybara.gift',
-      '«Пиши сильно» Ростислава Семківа',
-      '«Углиб за морським коником.Книжка про пам’ять, яка запам’ятається», Гільде Естбю, Ульва Естбю',
-      '«Випивка: Історія однієї любові», Керолайн Непп'
-    ];
+const prizes = ["Футболка", "Сумка - бананка", "Силянка"];
 
     for (let i = 0; i < prizes.length; i++) {
       let indexes = this.tickets.length - 1;
