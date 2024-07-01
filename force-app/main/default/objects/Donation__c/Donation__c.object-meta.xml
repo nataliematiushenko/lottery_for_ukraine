@@ -161,11 +161,8 @@
     </nameField>
     <pluralLabel>Donations</pluralLabel>
     <searchLayouts>
-        <searchResultsAdditionalFields>DateTime__c</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>Description__c</searchResultsAdditionalFields>
+        <searchResultsAdditionalFields>NickName__c</searchResultsAdditionalFields>
         <searchResultsAdditionalFields>Amount__c</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>Card_total__c</searchResultsAdditionalFields>
-        <searchResultsAdditionalFields>RRN__c</searchResultsAdditionalFields>
     </searchLayouts>
     <sharingModel>ReadWrite</sharingModel>
     <visibility>Public</visibility>
