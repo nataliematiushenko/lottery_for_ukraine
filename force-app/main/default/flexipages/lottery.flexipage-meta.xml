@@ -8,16 +8,6 @@
     <flexiPageRegions>
         <itemInstances>
             <componentInstance>
-                <componentName>donators</componentName>
-                <identifier>i42as_donators</identifier>
-            </componentInstance>
-        </itemInstances>
-        <name>main</name>
-        <type>Region</type>
-    </flexiPageRegions>
-    <flexiPageRegions>
-        <itemInstances>
-            <componentInstance>
                 <componentName>winners</componentName>
                 <identifier>i42as_winners</identifier>
             </componentInstance>
@@ -25,8 +15,18 @@
         <name>sidebar</name>
         <type>Region</type>
     </flexiPageRegions>
+        <flexiPageRegions>
+        <itemInstances>
+            <componentInstance>
+                <componentName>donators</componentName>
+                <identifier>i42as_donators</identifier>
+            </componentInstance>
+        </itemInstances>
+        <name>main</name>
+        <type>Region</type>
+    </flexiPageRegions>
     <masterLabel>lottery</masterLabel>
-    <sobjectType>Donation__c</sobjectType>
+    <sobjectType>Case</sobjectType>
     <template>
         <name>flexipage:recordHomeTemplateDesktop</name>
         <properties>

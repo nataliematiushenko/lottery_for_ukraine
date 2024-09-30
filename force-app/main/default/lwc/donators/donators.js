@@ -4,7 +4,7 @@ import { publish, MessageContext } from "lightning/messageService";
 import getRecords from '@salesforce/apex/DonationsController.getRecords';
 
 export default class Donators extends LightningElement {
-  @api ticketPrice = 50;
+  @api ticketPrice = 100;
   style = "height: 42 vh";
   @track participants;
   @track tickets = [];
@@ -46,7 +46,16 @@ export default class Donators extends LightningElement {
   }
 
   findWinners() {
-const prizes = ["Футболка", "Сумка - бананка", "Силянка"];
+    const prizes = [
+      "Прапор підписаний бійцями 5 ОШБр",
+      "Сертифікат 500грн у кав'ярні @druzhba.kyiv",
+      "Баранчик ручної роботи від @polinnium",
+      "Керамічна зґарда від @tvorchi_proyavy",
+      "Силянка від @gotsadrala",
+      "Вишитий комір від @ptashyna_zgraia",
+      "\"Інтернат\" Сергія Жадана з автографом",
+      "Комплект з трьох книг \"Атлант розправив плечі\""
+    ];
 
     for (let i = 0; i < prizes.length; i++) {
       let indexes = this.tickets.length - 1;

@@ -12,12 +12,10 @@
       </div>
       <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12">
         <div class="slds-grid slds-grid_align-end">
-          <lightning-button disabled={totalTickets} onclick={generateTickets}
+          <lightning-button disabled={totalTickets}
+            onclick={generateTickets}
             label="Згенерувати квитки"
             icon-name="utility:add"></lightning-button>
-          <lightning-button onclick={findWinners}
-            label="Визначити переможців"
-            icon-name="utility:favorite_alt"></lightning-button>
         </div>
       </div>
     </div>
@@ -38,6 +36,11 @@
             </div>
           </template>
         </div>
+      </div>
+      <div class="slds-card__footer slds-float_right">
+        <lightning-button onclick={findWinners}
+          label="Визначити переможців"
+          icon-name="utility:favorite_alt"></lightning-button>
       </div>
     </article>
 
