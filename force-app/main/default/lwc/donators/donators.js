@@ -89,9 +89,6 @@ export default class Donators extends LightningElement {
 
         // Add the prize to the winner
         randomRecord.prize = this.prizes[i];
-
-        console.log(`winner #${i} : `, randomRecord);
-
         this.winners.push(randomRecord);
         this.tickets = this.excludeWinner(randomRecord);
       } else {
