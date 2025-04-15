@@ -1,74 +1,102 @@
 import { LightningElement, api, track, wire } from 'lwc';
 import tickets_channel from "@salesforce/messageChannel/tickets__c";
 import { publish, MessageContext } from "lightning/messageService";
-import getRecords from '@salesforce/apex/DonationsController.getRecords';
+import getDonationsFromMono from '@salesforce/apex/MonoRestServiceController.getDonationsFromMono';
 
 export default class Donators extends LightningElement {
-  @api ticketPrice = 100;
+  @api ticketPrice = 1;
   style = "height: 42 vh";
   @track participants;
   @track tickets = [];
   @track ticketsToDisplay = [];
   @track winners = [];
-  totalTickets;
   totalParticipants;
 
   @wire(MessageContext)
   messageContext;
 
-  async connectedCallback() {
-    let participants = await getRecords();
+  prizes;
+  token;
+  jarLabel;
+  fromDate;
+  isLoading = false;
 
-    this.participants = participants;
-    this.totalParticipants = this.participants.length;
+  get disableTicketsGeneration() {
+    return !this.jarLabel || !this.token || !this.fromDate;
   }
 
-  generateTickets() {
-    if (!this.totalTickets) {
+  setPrizes(event) {
+    this.prizes = event.detail.value?.split(',').filter(Boolean).map(e => e.trim()) || [];
+  }
 
+  setStartDate(event) {
+    this.fromDate = event.target.value;
+  }
 
-      let tix = 1;
-      this.participants.forEach(p => {
-        let delta = p.Amount__c < this.ticketPrice ? 1 : Math.floor(p.Amount__c / this.ticketPrice);
-        for (let i = 1; i <= delta; i++) {
-          this.tickets.push({
-            t_number: tix,
-            personal_t_num: i,
-            ...p
-          });
-          tix++;
-        }
+  setToken(event) {
+    this.token = event.target.value;
+  }
+
+  setJarTitle(event) {
+    this.jarLabel = event.target.value;
+  }
+
+  generateTicketsFromMono() {
+    this.isLoading = true;
+
+    getDonationsFromMono({ token: this.token, label: this.jarLabel, from_date: this.fromDate })
+      .then((resp) => {
+        this.participants = JSON.parse(resp);
+        this.totalParticipants = this.participants.length;
+      })
+      .then(() => {
+        this.assignTickets();
+      })
+      .catch(error => {
+        console.error('Error fetching Mono donations:', error);
+      })
+      .finally(() => {
+        this.isLoading = false;
       });
-      this.ticketsToDisplay = this.tickets;
-      console.log(JSON.parse(JSON.stringify(this.ticketsToDisplay)));
-      this.totalTickets = this.tickets.length;
-    }
   }
+
+  assignTickets() {
+    let tix = 1;
+    this.participants.forEach(p => {
+      let delta = p.amount < this.ticketPrice ? 1 : Math.floor(p.amount / this.ticketPrice);
+      for (let i = 1; i <= delta; i++) {
+        this.tickets.push({
+          t_number: tix,
+          personal_t_num: i,
+          ...p
+        });
+        tix++;
+      }
+    });
+    this.ticketsToDisplay = JSON.parse(JSON.stringify(this.tickets));
+
+    this.totalTickets = this.ticketsToDisplay.length;
+  }
+
 
   findWinners() {
-    const prizes = [
-      "Прапор підписаний бійцями 5 ОШБр",
-      "Сертифікат 500грн у кав'ярні @druzhba.kyiv",
-      "Баранчик ручної роботи від @polinnium",
-      "Керамічна зґарда від @tvorchi_proyavy",
-      "Силянка від @gotsadrala",
-      "Вишитий комір від @ptashyna_zgraia",
-      "\"Інтернат\" Сергія Жадана з автографом",
-      "Комплект з трьох книг \"Атлант розправив плечі\""
-    ];
 
-    for (let i = 0; i < prizes.length; i++) {
+    for (let i = 0; i < this.prizes.length; i++) {
       let indexes = this.tickets.length - 1;
-      let randomIndex = Math.round(indexes * Math.random());
-      let randomRecord = this.tickets[randomIndex];
+      if (indexes >= 0) {
+        let randomIndex = Math.round(indexes * Math.random());
+        let randomRecord = this.tickets[randomIndex];
 
-      // Add the prize to the winner
-      randomRecord.prize = prizes[i];
+        // Add the prize to the winner
+        randomRecord.prize = this.prizes[i];
 
-      console.log(`winner #${i} : `, randomRecord);
+        console.log(`winner #${i} : `, randomRecord);
 
-      this.winners.push(randomRecord);
-      this.tickets = this.excludeWinner(randomRecord);
+        this.winners.push(randomRecord);
+        this.tickets = this.excludeWinner(randomRecord);
+      } else {
+        break; // if there are more prizes than tickets, stop
+      }
     }
     this.style = '';
 
@@ -76,7 +104,7 @@ export default class Donators extends LightningElement {
   }
 
   excludeWinner(i) {
-    let copy = this.tickets.filter(t => t.NickName__c !== i.NickName__c);
+    let copy = this.tickets.filter(t => t.comment !== i.comment);
     return copy;
   }
 

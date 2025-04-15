@@ -1,6 +1,29 @@
 <template>
   <div class="slds-p-around_medium">
+    <lightning-input type="text"
+      label="Назва банки"
+      onchange={setJarTitle}></lightning-input>
+
+    <lightning-input type="date"
+      name="input1"
+      label="Дата початку збору"
+      onchange={setStartDate}></lightning-input>
+
+    <lightning-input type="password"
+      label="API Token"
+      onchange={setToken}
+></lightning-input>
+
+    <lightning-input type="text"
+      label="Перелічи через кому призи"
+      onchange={setPrizes}
+      class="slds-m-bottom_xx-large"></lightning-input>
+
     <div class="slds-grid slds-wrap">
+      <lightning-spinner alternative-text="Loading"
+        size="xx-small"
+        lwc:if={isLoading}></lightning-spinner>
+
       <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12"
         style="color:white">
         <span class="slds-text-heading_medium slds-m-top_medium">
@@ -12,8 +35,8 @@
       </div>
       <div class="slds-col slds-size_1-of-1 slds-medium-size_6-of-12">
         <div class="slds-grid slds-grid_align-end">
-          <lightning-button disabled={totalTickets}
-            onclick={generateTickets}
+          <lightning-button disabled={disableTicketsGeneration}
+            onclick={generateTicketsFromMono}
             label="Згенерувати квитки"
             icon-name="utility:add"></lightning-button>
         </div>
@@ -30,14 +53,14 @@
             for:item="ticket">
             <div key={ticket.number}
               class="slds-p-around_small slds-border_bottom">
-              <span class="slds-text-heading_medium">{ticket.NickName__c}</span>
+              <span class="slds-text-heading_medium">{ticket.comment}</span>
               <span class="slds-text-body_small slds-float_right slds-text-heading_medium slds-text-color_weak">Квиток №
                 {ticket.t_number}</span>
             </div>
           </template>
         </div>
       </div>
-      <div class="slds-card__footer slds-float_right">
+      <div class="slds-card__footer slds-float_right" style="padding-right: 0;">
         <lightning-button onclick={findWinners}
           label="Визначити переможців"
           icon-name="utility:favorite_alt"></lightning-button>
